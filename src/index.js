@@ -7,47 +7,73 @@ function getAllPups() {
 	.then((resp) => resp.json())
 }
 
-//makes the HTML code for every pup
-function renderPups(pup){
-	const spanTag = document.createElement('span');
-	spanTag.innerHTML = `${pup.name}`
-	spanTag.className = "dogData"
 
-	dogBar.append(spanTag)
+function pupGoodOrBad(pupsObj) {
+	return patchDogs(pupsObj)
+	.then(() => document.querySelector(`#dog-${pupsObj.id}`).innerHTML = `Good Dog?: ${pupsObj.isGoodDog}`)
+}
 
-	//once you click each dog name, it shows each dogs information and picture
-	spanTag.addEventListener("click", () => {
+function patchDogs(pupsObj) {
 
-
-		let dogInfo = document.createElement('div')
-
-		dogInfo.className = "dogInfo"
-
-					dogInfo.innerHTML = `<li>${pup.name}</li>
-					<image src = ${pup.image}>
-					<li>Is he a good dog?: ${pup.isGoodDog}</li>`
-
-		const dogSummary = document.getElementById('dog-info');
-		dogSummary.innerHTML = ""
-
-		dogSummary.append(dogInfo)
-
+	if (pupsObj.isGoodDog == true ) {
+		pupsObj.isGoodDog = false
+	} else {
+		pupsObj.isGoodDog = true
 	}
-	)
+
+	return fetch(dogURL + `/${pupsObj.id}`, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+			"Accept": "application/json"
+		},
+		body: JSON.stringify({
+			isGoodDog: pupsObj.isGoodDog
+		})
+	}).then((resp) => resp.json())
+
+
+
 
 }
 
+
+//makes the HTML code for every pup
+function renderPups(pupsObj){
+	let pupSpan = document.createElement("span")
+	pupSpan.innerHTML = `${pupsObj.name}`
+
+	dogBar.append(pupSpan);
+
+	pupSpan.addEventListener("click", () => {
+
+		let dogData = document.createElement("li")
+
+		let dogInfo = document.getElementById("dog-info")
+
+
+		dogData.innerHTML = ` <img src=${pupsObj.image}>
+							<h2>Name: ${pupsObj.name}</h2>
+							<h2 id='dog-${pupsObj.id}'>Good Dog?: ${pupsObj.isGoodDog} </h2>
+							<button class='dog-${pupsObj.id}'>Good Dog!</button>`
+
+		dogInfo.innerHTML = ""
+		dogInfo.append(dogData)
+
+		dogData.querySelector(`.dog-${pupsObj.id}`).addEventListener("click", () => {
+			pupGoodOrBad(pupsObj)
+
+		})
+
+
+	})
+
+
+}
 
 function addPups(pupsArray) {
 	pupsArray.forEach((pupObj) => renderPups(pupObj))
 }
 
-getAllPups().then((allPups) => addPups(allPups))
-
-
-
-
-
-
-
+getAllPups().then((pupsArray) => addPups(pupsArray) )
 
