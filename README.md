@@ -16,8 +16,8 @@ WHEN LOOKING AT PUP PUPS USER SHOULD BE ABLE TO:
 ### STEP 1: VIEW THE DATA
 
 All of the dog data is stored in the `db.json` file. You'll want to access this data
-using a json server. In order to do this, run `$ npm install -g json-server` and
-then `$ json-server --watch db.json`.
+using a json server. In order to do this, run `$ npm install -g json-server` andjson-se
+then `$ rver --watch db.json`.
 
 This will setup the data on a server using restful routes at http://localhost:3000/pups.
 Go ahead and head to that url in your browser to view the data.
